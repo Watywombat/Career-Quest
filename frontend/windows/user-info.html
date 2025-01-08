@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <title>CareerQuest</title>
+    <link rel="stylesheet" href="styleedituser.css">
+</head>
+<body>
+    
+    <div class="containeruserinformation">
+        
+        <main>
+            <h1>User Information</h1>
+            <div id="userInfo" class="user-info"></div>
+            <div>
+                <button id="edit-button" class="edit-button">Edit Info</button>
+                <button id="delete-button" class="edit-button">Delete Account</button>
+            </div>
+
+
+            <form id="edit-form" style="display: none;">
+                <h2>Edit User Information</h2>
+                <label for="user-name">Name:</label>
+                <input type="text" id="user-name" placeholder="Enter name">
+                 <label for="age">email:</label>
+                <input type="email" id="user-email" placeholder="Enter Email">
+                <label for="formation">Description:</label>
+                <input type="text" id="user-description" placeholder="Enter Formation">
+                <button id="save-button" type="submit">Save</button>
+            </form>
+        </main>
+    </div>
+
+    <script type="module" src="scripteditprofile.js"></script>
+    <script type="module" src="../fetch.js"></script>
+    <script type="module" src="../display.js"></script>
+    <script type="module">
+        import * as fetch from "../fetch.js";
+        import * as display from "../display.js";
+
+        document.getElementById("edit-form").addEventListener('submit', async function(){
+            const username = document.getElementById('user-name').value;
+            const email = document.getElementById('user-email').value;
+            const description = document.getElementById('user-description').value;
+
+            const body = {
+                username: username,
+                email: email,
+                description: description,
+            }
+
+            await fetch.patchUser(body)
+            document.location.reload();
+        });
+
+         document.getElementById('delete-button').addEventListener('click', async function() {
+            await fetch.deleteUser();
+            sessionStorage.clear();
+            window.location.href = "../anybody/anybody.html";
+
+        });
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const userInfo = document.getElementById('userInfo');
+            await display.populateUserInfo(userInfo);
+            //userInfo.innerHTML = await display.populateUserInfo(userInfo)
+        });
+
+    </script>
+</body>
+</html>
+
+</body>
+</html>

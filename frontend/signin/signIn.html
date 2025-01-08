@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link rel="stylesheet" href="stylesignin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+    
+<div class="container" id="container">
+    <div class="form-container sign-up">
+        <form id="signUpForm">
+            <h1>Create Account</h1>
+            <div class="chose">
+                <span class="text">Employee</span>
+                <input type="checkbox" id="is_recruiter">
+                <span class="text">Employer</span>
+            </div>
+            <input type="text" id="signUpName" placeholder="Username" required>
+            <input type="email" id="signUpEmail" placeholder="Email" required>
+            <input type="password" id="signUpPassword" placeholder="Password" required>
+            <input type="password" id="signUpPassword2" placeholder="Password" required>
+
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+
+    <div class="form-container sign-in">
+        <form id="signInForm">
+            <h1>Sign In</h1>
+            <div class="social-icons">
+                <a href="#" class="icon"><i class="fa-brands fa-google"></i></a>
+                <a href="#" class="icon"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+            </div>
+            <span>or use email and password</span>
+            <input type="text" id="signInusername" placeholder="username" required>
+            <input type="password" id="signInPassword" placeholder="Password" required>
+            <a href="#">Forget password</a>
+            <button type="submit">Sign In</button>
+        </form>
+    </div>
+
+    <div class="toggle-container">
+        <div class="toggle">
+            <div class="toggle-panel toggle-left">
+                <h1>Welcome Back!</h1>
+                <p>Enter your personal details to use all of our site's features</p>
+                <button class="hidden" id="login">Sign In</button>
+            </div>
+            <div class="toggle-panel toggle-right">
+                <h1>Hello, Friend!</h1>
+                <p>Enter your personal details to use all of our site's features</p>
+                <button class="hidden" id="register">Sign Up</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="module" src="scriptsignin.js"></script>
+<script type="module" src="../fetch.js"></script>
+<script type="module" src="../display.js"></script>
+<script type="module">
+    import * as fetch from "../fetch.js";
+    import * as display from "../display.js";
+
+    document.getElementById('signUpForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('signUpName').value;
+        const email = document.getElementById('signUpEmail').value;
+        const password1 = document.getElementById('signUpPassword').value;
+        const password2 = document.getElementById('signUpPassword2').value;
+        const is_recruiter = document.getElementById('is_recruiter').checked;
+        const passwordError = document.getElementById('passwordError');
+        if (password1 !== password2) {
+            alert("Passwords doesn't match.")
+        } else {
+            try {
+                const userData = {
+                    username: username,
+                    email: email,
+                    password: password1,
+                    is_recruiter: is_recruiter,
+                };
+
+                const response = await fetch.registerUser(userData)
+                if (response && response.token) {
+                    console.log(response);
+                    sessionStorage.setItem('authToken', response.token);
+                    if (response && response.is_recruiter === true) {
+                        window.location.href = "../recruit/recruiter.html"
+                    } else if (response && response.is_recruiter === false) {
+                        window.location.href = "../users/users.html"
+                    }
+                }
+            } catch (error) {
+                alert(`error login account:${error}`);
+            }
+        }
+    });
+
+
+    document.getElementById('signInForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('signInusername').value;
+        const password = document.getElementById('signInPassword').value;
+
+        const passwordError = document.getElementById('passwordError2');
+        await fetch.loginUser()
+
+        try {
+            const userData = {
+        username: username,
+        password: password,
+            };
+
+        const response = await fetch.loginUser(userData);
+            if (response && response.token) {
+                console.log(response);
+                sessionStorage.setItem('authToken', response.token);
+                const userdata = await fetch.getUser();
+
+                    if (userdata) {
+                        if (userdata.is_staff === true) {
+                            console.log('Staff');
+                            window.location.href = "../admin panel/admin.html";
+                        } else if (userdata.is_recruiter === true) {
+                            console.log('Recruiter detected');
+                            window.location.href = "../recruit/recruiter.html";
+                        } else if (userdata.is_recruiter === false) {
+                            console.log('User detected');
+                            window.location.href = "../users/users.html";
+                        }
+                    }
+                }
+        } catch (error) {
+            alert("Error signing in. Please check your credentials.");
+            passwordError.style.display = 'block';
+        }
+
+    });
+</script>
+
+</body>
+</html>

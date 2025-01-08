@@ -1,0 +1,257 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+*{
+  margin:0px;
+  padding:0px;
+  box-sizing: border-box;
+}
+:root{
+  --color-text: #616161;
+  --color-text-btn: #ffffff;
+  --card1-gradient-color1: #f12711;
+  --card1-gradient-color2: #f5af19;
+  --card2-gradient-color1: #7F00FF;
+  --card2-gradient-color2: #E100FF;
+  --card3-gradient-color1: #3f2b96;
+  --card3-gradient-color2: #a8c0ff;
+  --card4-gradient-color1: #11998e;
+  --card4-gradient-color2: #38ef7d;
+  --card5-gradient-color1: #f1c4f1;
+  --card5-gradient-color2: #ca50ca;
+  --card6-gradient-color1: #e79898;
+  --card6-gradient-color2: #e61c1c;
+
+}
+body{
+  font-family: 'Roboto', sans-serif;
+  background-color: transparent;
+
+  height: 100vh;
+  display: flex;
+  align-items: center;
+
+  flex-wrap: wrap;
+  gap:auto;
+  justify-content: space-between;
+}
+.card-wrap{
+
+  width: 40%;
+  background: #ffffff;
+  border-radius: 20px;
+  border: 5px solid #ffffff;
+  overflow: hidden;
+  color: var(--color-text);
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+              rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  cursor: pointer;
+  transition: all .2s ease-in-out;
+}
+
+.card-header{
+  height: 100px;
+  width: 100%;
+  background: red;
+  border-radius:100% 0% 100% 0% / 0% 50% 50% 100%;
+  display: grid;
+  place-items: center;
+
+}
+/* .card-wrap:hover{
+    transform: scale(1.1);
+} */
+
+.card-header i{
+  color: #fff;
+  font-size: 52px;
+}
+.card-content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  margin: 0 auto;
+}
+.card-title{
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  
+}
+.card-text{
+  text-align: left;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+.card-btn{
+  border: none;
+  border-radius: 100px;
+  padding: 5px 30px;
+  color: #fff;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+.card-header.cdi{
+  background: linear-gradient(to bottom left, var(--card1-gradient-color1), var(--card1-gradient-color2));
+}
+.card-header.cdd{
+  background: linear-gradient(to bottom left, var(--card2-gradient-color1), var(--card2-gradient-color2));
+}
+.card-header.alternance{
+  background: linear-gradient(to bottom left, var(--card3-gradient-color1), var(--card3-gradient-color2));
+}
+.card-header.stage{
+  background: linear-gradient(to bottom left, var(--card4-gradient-color1), var(--card4-gradient-color2));
+}
+.card-header.part-time{
+    background: linear-gradient(to bottom left, var(--card5-gradient-color1), var(--card5-gradient-color2));
+  }
+  .card-header.full-time{
+    background: linear-gradient(to bottom left, var(--card6-gradient-color1), var(--card6-gradient-color2));
+  }
+    
+.card-btn.cdi {
+  background: linear-gradient(to left, var(--card1-gradient-color1), var(--card1-gradient-color2));
+}
+.card-btn.cdd{
+  background: linear-gradient(to left, var(--card2-gradient-color1), var(--card2-gradient-color2));
+}
+.card-btn.alternance{
+  background: linear-gradient(to left, var(--card3-gradient-color1), var(--card3-gradient-color2));
+}
+.card-btn.stage{
+  background: linear-gradient(to left, var(--card4-gradient-color1), var(--card4-gradient-color2));
+}
+.card-btn.part-time{
+    background: linear-gradient(to bottom left, var(--card5-gradient-color1), var(--card5-gradient-color2));
+  }
+  .card-btn.full-time{
+    background: linear-gradient(to bottom left, var(--card6-gradient-color1), var(--card6-gradient-color2));
+  }
+button{
+    outline: none;
+    cursor: pointer;
+    font-weight: 500;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    transition: background 0.1s linear, border-color 0.1s linear, color 0.1s linear;
+  }
+.card-btn.one .popup{
+    position: relative;
+    left: 50%;
+  }
+
+  .popup{
+display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 8px;
+}
+
+  .popup.show{
+    top: 50%;
+    display: block !important;
+    opacity: 1;
+    pointer-events: auto;
+    transform:translate(-50%, -50%) scale(1);
+    transition: top 0s 0s ease-in-out,
+                opacity 0.2s 0s ease-in-out,
+                transform 0.2s 0s ease-in-out;
+  
+  }
+  .popup :is(header, .icons, .field){
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .popup header{
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ebedf9;
+  }
+  header span{
+    font-size: 21px;
+    font-weight: 600;
+  }
+  header .close, .icons a{
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+  }
+  header .close{
+    color: #ebebeb;
+    font-size: 17px;
+    background: #34395a;
+    height: 33px;
+    width: 33px;
+    cursor: pointer;
+  }
+  header .close:hover{
+    background: #e0e1e9;
+    z-index: 10;
+  }
+  .popup .content{
+    margin: 20px 0;
+  }
+  .popup .icons{
+    margin: 15px 0 20px 0;
+  }
+  .content p{
+    font-size: 16px;
+  }
+  
+  .content .field{
+    margin: 12px 0 -5px 0;
+    height: 45px;
+    border-radius: 4px;
+    padding: 0 5px;
+    border: 1px solid #e1e1e1;
+  }
+  
+  
+  
+  
+  .field button{
+      width: 100%;
+      align-items: end;
+    color: #fff;
+    padding: 5px 18px;
+    background: #7d2ae8;
+  }
+  .field button:hover{
+    background: #8d39fa;
+  }
+  .card-container{
+    width: 95%;
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 30px;
+    
+    margin: 0 auto;
+  }
+
+::-webkit-scrollbar{
+  width: 10px;
+}
+::-webkit-scrollbar-track{
+  background:transparent;
+}
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(#3f2b96, #a8c0ff);
+  border-radius: 2000px;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+}

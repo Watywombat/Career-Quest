@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <title>CareerQuest</title>
+    <link rel="stylesheet" href="styledash.css">
+</head>
+<body style="background-color: transparent;">
+
+    <!-- Main Content -->
+    <main>
+        <div id="enterprise-section">
+            <h1>Your Enterprise</h1>
+            <div id="companyCard" class="new-users">
+                <div class="user-list">
+                    <form id="chooseCompanyForm">
+                    <label>
+                        Select a Company
+                        <select id="chooseCompanySelect"></select>
+                        <button type="submit">Validate</button>
+                    </label>
+                </form></div>
+
+            </div>
+
+            <h1>Your Employees</h1>
+            <div id="companyMembers" class="new-users">
+                <div class="user-list">No members in this company yet.</div>
+
+            </div>
+        </div>
+
+        <div class="new-users">
+            <div id="no-enterprise-section" style="display: none;">
+                <div class="user-list">
+                    <h1>Select or Create Your Company</h1>
+                    <form id="chooseCompanyForm">
+                        <label for="existing-companies">Choose an existing company:</label>
+                        <select id="existing-companies">
+                            <option value="">Select a company</option>
+                        </select>
+                        <button type="submit" class="butt">Submit</button>
+                    </form>
+                </div>
+
+                <!-- Create Company section -->
+                <div id="create-company-section">
+                    <h1>Or Create a New Company</h1>
+                    <div class="user-list">
+                        <form id="companyForm">
+                            <label for="new-company-name">Company Name:</label>
+                            <input type="text" id="new-company-name" placeholder="Enter company name" required>
+                            <label for="new-company-location">Location:</label>
+                            <input type="text" id="new-company-location" placeholder="Enter company location" required>
+
+                            <button type="submit" class="butt">Create Company</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Offers Section -->
+        <div class="recent-offers">
+            <h1>Offers</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Offers Name</th>
+                        <th>Offers Type</th>
+                        <th>Candidates</th>
+                    </tr>
+                </thead>
+                <tbody id="offers-list">
+                    <!-- Offers will be populated dynamically -->
+                </tbody>
+            </table>
+            <a href="#">Show All</a>
+        </div>
+
+        <!-- Edit Offer Modal -->
+        <div id="edit-offer-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Edit Offer</h2>
+                <label for="edit-offer-name">Offer Name:</label>
+                <input type="text" id="edit-offer-name" placeholder="Enter offer name">
+                <label for="edit-offer-type">Offer Type:</label>
+                <input type="text" id="edit-offer-type" placeholder="Enter offer type">
+                <label for="edit-offer-candidates">Candidates:</label>
+                <input type="number" id="edit-offer-candidates" placeholder="Enter number of candidates">
+                <button id="save-offer-btn" class="butt">Save Changes</button>
+            </div>
+        </div>
+
+    </main>
+
+    <script type="module" src="scriptenterprise.js"></script>
+    <script type="module" src="../fetch.js"></script>
+    <script type="module" src="../display.js"></script>
+    <script type="module">
+        import * as fetch from "../fetch.js";
+        import * as display from "../display.js";
+        document.getElementById('chooseCompanyForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const companyId = document.getElementById('chooseCompanySelect').value;
+            await fetch.updateUserCompany(companyId);
+
+            location.reload()
+        });
+
+        document.addEventListener('DOMContentLoaded', async function() {
+           const companies = await fetch.getAllCompanies()
+           const chooseCompanySelect = document.getElementById('chooseCompanySelect');
+           const companyCard = document.getElementById("companyCard");
+           const companyMembers = document.getElementById("companyMembers");
+           const jobOffersList = document.getElementById("offers-list");
+
+           await display.populateSelectMenu(chooseCompanySelect, companies);
+           await display.populateCompany(companyCard);
+           await display.populateCompanyMembers(companyMembers);
+           await display.populateCompanyJobOffers(jobOffersList);
+        });
+    </script>
+
+</body>
+</html>

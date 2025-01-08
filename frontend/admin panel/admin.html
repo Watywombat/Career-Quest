@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Board Admin Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: rgba(180, 180, 180, 0.973);
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .form-container {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Page</h1>
+
+    <!-- Company Management -->
+    <div class="form-container">
+        <h2>Create/Update Company</h2>
+        <form id="companyForm">
+            <input type="hidden" id="companyId" value="">
+            <label for="companyName">Company Name:</label>
+            <input type="text" id="companyName" required>
+            <label for="companyLocation">Location:</label>
+            <input type="text" id="companyLocation" required>
+            <button type="submit">Save Company</button>
+        </form>
+    </div>
+
+    <table id="companyTable">
+        <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>Location</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- User Management -->
+    <div class="form-container">
+        <h2>Create/Update User</h2>
+        <form id="userForm">
+            <input type="hidden" id="userId" value="">
+            <label for="username">Username:</label>
+            <input type="text" id="username" required>
+            <label for="userEmail">Email:</label>
+            <input type="email" id="userEmail" required>
+            <label for="userPassword">Password:</label>
+            <input type="password" id="userPassword" required>
+            <button type="submit">Save User</button>
+        </form>
+    </div>
+
+    <table id="userTable">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- Job Offer Management -->
+    <div class="form-container">
+        <h2>Create/Update Job Offer</h2>
+        <form id="jobForm">
+            <input type="hidden" id="jobId" value="">
+            <label for="jobName">Job Name:</label>
+            <input type="text" id="jobName" required>
+            <label for="jobType">Job Type:</label>
+            <select id="jobType" required>
+                <option value="alternance">Alternance</option>
+                <option value="cdi">CDI</option>
+                <option value="cdd">CDD</option>
+                <option value="stage">Stage</option>
+                <option value="fulltime">Full-time</option>
+                <option value="parttime">Part-time</option>
+            </select>
+            <label for="jobWage">Wage:</label>
+            <input type="number" id="jobWage" required>
+            <button type="submit">Save Job Offer</button>
+        </form>
+    </div>
+
+    <table id="jobTable">
+        <thead>
+            <tr>
+                <th>Job Name</th>
+                <th>Type</th>
+                <th>Wage</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script type="module" src="../fetch.js"></script>
+    <script type="module" src="../display.js"></script>
+    <script type="module">
+
+       import * as fetch from '../fetch.js';
+       import * as display from "../display.js";
+
+document.getElementById('companyForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const companyId = document.getElementById('companyId').value;
+    const companyName = document.getElementById('companyName').value;
+    const companyLocation = document.getElementById('companyLocation').value;
+
+    if (companyId) {
+        await fetch.updateCompany(companyId, { name: companyName, location: companyLocation });
+        alert(`Company with ID ${companyId} updated.`);
+    } else {
+        await fetch.createCompany({ name: companyName, location: companyLocation });
+        alert('Company created successfully.');
+    }
+
+    populateCompanyTable();
+});
+
+async function populateCompanyTable() {
+    const companyTable = document.querySelector('#companyTable tbody');
+    const companies = await fetch.getAllCompanies();
+    companyTable.innerHTML = '';
+
+    companies.forEach(company => {
+        const newRow = companyTable.insertRow();
+        newRow.innerHTML = `
+            <td>${company.name}</td>
+            <td>${company.location}</td>
+            <td><button id="editButton-${company.id}">Edit</button>
+                <button id="deleteButton-${company.id}">Delete</button></td>
+        `;
+
+        document.getElementById(`editButton-${company.id}`).addEventListener('click', async function() {
+            const companyName = document.getElementById("companyName").value;
+            const companyLocation = document.getElementById("companyLocation").value;
+
+            const body = {
+                ...(companyName && { name: companyName, }),
+                ...(companyLocation && { location: companyLocation, }),
+            }
+
+            await fetch.patchCompany(company.id, body)
+            location.reload()
+        });
+
+        const deleteButton = document.getElementById(`deleteButton-${company.id}`);
+        deleteButton.addEventListener('click', async function() {
+            await fetch.deleteCompany(company.id)
+            location.reload()
+        });
+
+
+    });
+}
+
+document.getElementById('userForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const userId = document.getElementById('userId').value;
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('userEmail').value;
+    const password = document.getElementById('userPassword').value;
+
+    if (userId) {
+        await fetch.updateUser(userId, { username, email, password });
+        alert(`User with ID ${userId} updated.`);
+    } else {
+        await fetch.registerUser({ username, email, password });
+        alert('User created successfully.');
+    }
+
+    populateUserTable();
+});
+
+async function populateUserTable() {
+    const userTable = document.querySelector('#userTable tbody');
+    const users = await fetch.getAllUsers();
+
+    userTable.innerHTML = '';
+
+    users.forEach(user => {
+        const newRow = userTable.insertRow();
+        newRow.innerHTML = `
+            <td>${user.username}</td>
+            <td>${user.email}</td>
+            <td><button id="editButton-${user.id}">Edit</button>
+                <button id="deleteButton-${user.id}">Delete</button></td>
+        `;
+
+        document.getElementById(`editButton-${user.id}`).addEventListener('click', async function() {
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("userEmail").value;
+            const password = document.getElementById("userPassword").value;
+
+            const body = {
+                ...(username && { username: username, }),
+                ...(email && { email: email, }),
+                ...(password && { password: password, }),
+            }
+
+            await fetch.adminPatchUser(user.id, body)
+            location.reload()
+        });
+
+        const deleteButton = document.getElementById(`deleteButton-${user.id}`);
+        deleteButton.addEventListener('click', async function() {
+            await fetch.adminDeleteUser(user.id)
+            location.reload()
+        });
+    });
+}
+
+
+document.getElementById('jobForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const jobId = document.getElementById('jobId').value;
+    const jobName = document.getElementById('jobName').value;
+    const jobType = document.getElementById('jobType').value;
+    const jobWage = document.getElementById('jobWage').value;
+
+    if (jobId) {
+        await fetch.updateJobOffer(jobId, { title: jobName, category: jobType, salary: jobWage });
+        alert(`Job with ID ${jobId} updated.`);
+    } else {
+        await fetch.createJobOffer({ title: jobName, category: jobType, salary: jobWage });
+        alert('Job created successfully.');
+    }
+
+    populateJobTable();
+});
+
+async function populateJobTable() {
+    const jobTable = document.querySelector('#jobTable tbody');
+    const jobOffers = await fetch.getAllJobOffers();
+    jobTable.innerHTML = '';
+
+    jobOffers.forEach(job => {
+        const newRow = jobTable.insertRow();
+        newRow.innerHTML = `
+            <td>${job.title}</td>
+            <td>${job.category}</td>
+            <td>${job.salary}</td>
+            <td><button id="editButton-${job.id}">Edit</button>
+                <button id="deleteButton-${job.id}">Delete</button></td>
+
+        `;
+        document.getElementById(`editButton-${job.id}`).addEventListener('click', async function() {
+            const jobName = document.getElementById("jobName").value;
+            const jobType = document.getElementById("jobType").value;
+            const jobWage = document.getElementById("jobWage").value;
+            const jobId = document.getElementById("jobId").value;
+
+
+            const body = {
+                ...(jobName && { title: jobName }),
+                ...(jobType && { category: jobType }),
+                ...(jobWage && { wage: jobWage }),
+            }
+
+            await fetch.patchJobOffer(job.id, body)
+            location.reload()
+        });
+
+        const deleteButton = document.getElementById(`deleteButton-${job.id}`);
+        deleteButton.addEventListener('click', async function() {
+            await fetch.deleteJobOffer(job.id)
+            location.reload()
+        });
+    });
+}
+populateCompanyTable();
+populateUserTable();
+populateJobTable();
+
+    </script>
+</body>
+</html>

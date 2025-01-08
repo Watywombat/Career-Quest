@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <title>CareerQuest</title>
+    <link rel="stylesheet" href="styledash.css">
+</head>
+<body style="background-color: transparent;">
+    
+    <div class="newoffers">
+        <div class="header">
+            <h2>New Job Offer</h2>
+            <span class="material-icons-sharp">add</span>
+        </div>
+        <div class="content">
+            <form id="jobOfferForm">
+                <!-- Job Title -->
+                <div class="form-group">
+                    <label for="jobTitle">Job Title:</label>
+                    <input type="text" id="jobTitle" name="jobTitle" placeholder="Enter job title" required>
+                </div>
+    
+                <!-- Job Description -->
+                <div class="form-group">
+                    <label for="jobDescription">Job Description:</label>
+                    <input type="text" id="jobDescription" name="jobDescription" placeholder="Enter job description" required>
+                </div>
+    
+
+
+    
+                <!-- Job Type -->
+                <div class="form-group">
+                    <label for="jobType">Job Type:</label>
+                    <select id="jobCategory" name="jobType" required>
+                        <option value="">--Please choose a job type--</option>
+                        <option value="full-time">Full-Time</option>
+                        <option value="part-time">Part-Time</option>
+                        <option value="cdi">CDI</option>
+                        <option value="cdd">CDD</option>
+                        <option value="alternance">Alternance</option>
+                        <option value="stage">Stage</option>
+                    </select>
+                </div>
+    
+                <!-- Working Time -->
+                <div class="form-group">
+                    <label for="workingTime">Working Time:</label>
+                    <input type="text" id="jobWorkingTime" name="workingTime" placeholder="e.g., 9 AM - 5 PM" required>
+                </div>
+    
+                <!-- Wage -->
+                <div class="form-group">
+                    <label for="wage">Wage:</label>
+                    <input type="text" id="jobSalary" name="wage" placeholder="Enter wage" required>
+                </div>
+    
+                <button type="submit" class="submit-btn">Create Job Offer</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="../fetch.js"></script>
+    <script type="module" src="../display.js"></script>
+    <script type="module">
+        import * as fetch from "../fetch.js";
+        import * as display from "../display.js";
+
+        document.getElementById('jobOfferForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const user = await fetch.getUser();
+            const jobTitle = document.getElementById('jobTitle').value;
+            const jobDescription = document.getElementById('jobDescription').value;
+            const jobCompanyId = user.company.id;
+            const jobCategory = document.getElementById('jobCategory').value;
+            const jobWorkingTime = document.getElementById('jobWorkingTime').value;
+            const jobSalary = document.getElementById('jobSalary').value;
+
+            const jobData = {
+                title: jobTitle,
+                description: jobDescription,
+                company: jobCompanyId,
+                category: jobCategory,
+                working_time: jobWorkingTime,
+                salary: jobSalary,
+            };
+
+            const response = await fetch.createJobOffer(jobData);
+            if (response) {
+                this.reset();
+                alert('Job successfully created');
+            } else {
+                console.error('Failed to create job offer.');
+            }
+        });
+    </script>
+</body>
+</html>
+
+   
+    <script src="scriptdash.js"></script>
+    
+    
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Management Dashboard</title>
+    <link rel="stylesheet" href="styletiles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.6/css/line.css">
+    <style>
+
+    </style>
+</head>
+<body>
+    
+
+    <div class="user-apps-container">
+        <h2 class="text">User Applications</h2>
+        <div id="userApplicationsList"></div>
+    </div>
+
+    <script type="module" src="scripttiles.js"></script>
+    <script type="module" src="../fetch.js"></script>
+    <script type="module" src="../display.js"></script>
+    <script type="module">
+        import * as fetch from "../fetch.js";
+        import * as display from "../display.js";
+
+   
+        document.addEventListener('DOMContentLoaded', async function() {
+            const userApplicationsList = document.getElementById('userApplicationsList');
+            await display.populateUserApplications(userApplicationsList);
+        });
+    </script>
+</body>
+</html>
