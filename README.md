@@ -1,6 +1,6 @@
 # JobBoard Project 🏢💼
 
-![JobBoard Screenshot](Capture d’écran 2024-10-25 171315.jpg)  
+![JobBoard Screenshot](Capture_d’écran_2024-10-25_171315.jpg)  
 
 ## Overview
 
